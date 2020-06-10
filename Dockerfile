@@ -10,14 +10,10 @@ ENV NB_USER="ubuntu"
 ENV NB_UID="1000"
 ENV NB_GID="100"    
 
-
-
 ARG DEBIAN_FRONTEND=noninteractive
-
 
 # We stil setup everything as root, change permissions later
 USER root
-
 
 RUN apt-get -qy update && \
         apt-get -qy dist-upgrade && \
