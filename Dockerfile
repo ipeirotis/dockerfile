@@ -128,8 +128,7 @@ RUN fix-permissions /etc/jupyter/
 
 # Setup work directory
 USER $NB_USER
-RUN mkdir -p /home/$NB_USER/notebooks && \
-    fix-permissions /home/$NB_USER
+RUN mkdir -p /home/$NB_USER/notebooks
 
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents
@@ -141,8 +140,8 @@ RUN chmod +x /usr/bin/tini
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
 
-RUN chown $NB_USER:$NB_GID /home/$NB_USER
-
+RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
+RUN fix-permissions /home/$NB_USER
 
 EXPOSE 8888
 USER $NB_USER
