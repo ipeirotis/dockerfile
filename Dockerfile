@@ -86,7 +86,6 @@ RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 EXPOSE 8888
 
 RUN chmod -R 777 /home
-USER $NB_USER
 WORKDIR /home/ubuntu/notebooks
 
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
