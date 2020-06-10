@@ -20,13 +20,16 @@ RUN apt-get -qy install \
         sudo \
         nano \
         cron \
-        build-essential \
-        python3-dev \
         curl \
         git \
         wget \
         jq
 
+RUN apt-get -qy install \
+        build-essential \
+        python3-dev \
+        python3-pip 
+        
 RUN apt-get clean && \
         rm -rf /var/lib/apt/lists/*
 
