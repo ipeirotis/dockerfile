@@ -102,6 +102,7 @@ RUN pip3 install \
     notebook \
     jupyterlab
 
+
   
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
@@ -123,29 +124,24 @@ RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> /etc/jupyter
 RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Fix permissions on /etc/jupyter as root
-USER root
 RUN fix-permissions /etc/jupyter/
-
-# Setup work directory
-USER $NB_USER
-RUN mkdir -p /home/$NB_USER/notebooks
-
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents
 # kernel crashes.
-USER root
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
 RUN chmod +x /usr/bin/tini
-ENTRYPOINT ["/usr/bin/tini", "--"]
 
-
+# Setup work directory
+RUN mkdir -p /home/$NB_USER/notebooks
 RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
 RUN fix-permissions /home/$NB_USER
 
 EXPOSE 8888
-USER $NB_USER
+
 ENV HOME=/home/$NB_USER
 
+ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--user=ubuntu"]
 
+USER $NB_USER
