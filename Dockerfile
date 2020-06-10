@@ -1,38 +1,78 @@
 FROM ubuntu:latest
 
+# Configure environment
 ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 ENV PYTHONIOENCODING UTF-8
+ENV SHELL=/bin/bash
+ENV NB_USER="ubuntu"
+ENV NB_UID="1000"
+ENV NB_GID="100"    
+ENV HOME=/home/$NB_USER
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV NB_USER ubuntu
-ENV SHELL /bin/bash
-RUN useradd -ms /bin/bash ubuntu
 
-RUN mkdir -p /home/ubuntu/notebooks
+# We stil setup everything as root, change permissions later
+USER root
+
 
 RUN apt-get -qy update && \
         apt-get -qy dist-upgrade && \
         apt-get -qy upgrade
+
+# Install all OS dependencies for notebook server that starts but lacks all
+# features (e.g., download as all possible file formats)
+RUN apt-get install -yq --no-install-recommends \
+    wget \
+    bzip2 \
+    ca-certificates \
+    sudo \
+    locales \
+    fonts-liberation \
+    run-one       
         
-RUN apt-get -qy install \
-        sudo \
+RUN apt-get install -yq  \
         nano \
         cron \
         curl \
         git \
-        wget \
         jq
 
 RUN apt-get -qy install \
         build-essential \
         python3-dev \
         python3-pip 
-        
+
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen
+
 RUN apt-get clean && \
         rm -rf /var/lib/apt/lists/*
+
+# Copy a script that we will use to correct permissions after running certain commands
+COPY fix-permissions /usr/local/bin/fix-permissions
+RUN chmod a+rx /usr/local/bin/fix-permissions
+
+# Enable prompt color in the skeleton .bashrc before creating the default NB_USER
+RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc
+
+# Create NB_USER wtih name jovyan user with UID=1000 and in the 'users' group
+# and make sure these dirs are writable by the `users` group.
+RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
+    sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers && \
+    sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers && \
+    useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
+    chmod g+w /etc/passwd && \
+    fix-permissions $HOME
+
+USER $NB_UID
+WORKDIR $HOME
+
+# Setup work directory
+RUN mkdir -p /home/$NB_USER/notebooks && \
+    fix-permissions /home/$NB_USER
 
 # install latest version of pip
 RUN pip3 install -U pip
@@ -61,8 +101,14 @@ RUN pip3 install \
     nltk
     
 # install basic Python libraries to run Jupyter
-RUN pip3 install jupyter 
+RUN pip3 install \
+    jupyter \
+    notebook \
+    jupyterlab
 
+RUN jupyter notebook --generate-config
+
+RUN fix-permissions /home/$NB_USER
   
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
@@ -85,7 +131,10 @@ RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 EXPOSE 8888
 
-RUN chmod -R 777 /home
-WORKDIR /home/ubuntu/notebooks
+# Fix permissions on /etc/jupyter as root
+USER root
+RUN fix-permissions /etc/jupyter/
 
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
+
+USER $NB_UID
