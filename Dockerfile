@@ -9,7 +9,7 @@ ENV SHELL=/bin/bash
 ENV NB_USER="ubuntu"
 ENV NB_UID="1000"
 ENV NB_GID="100"    
-ENV HOME=/home/$NB_USER
+
 
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -68,7 +68,7 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers && \
     useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
     chmod g+w /etc/passwd && \
-    fix-permissions $HOME
+    fix-permissions /home/$NB_USER
 
 # install latest version of pip
 RUN pip3 install -U pip
@@ -140,9 +140,13 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/
 RUN chmod +x /usr/bin/tini
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-RUN chmod -R 777 /home
+
+RUN chown $NB_USER:$NB_GID /home/$NB_USER
+
 
 EXPOSE 8888
 USER $NB_USER
-CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--user=$NB_USER"]
+ENV HOME=/home/$NB_USER
+
+CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--user=ubuntu"]
 
