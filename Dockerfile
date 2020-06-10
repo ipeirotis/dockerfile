@@ -109,8 +109,6 @@ RUN pip3 install \
     notebook \
     jupyterlab
 
-RUN jupyter notebook --generate-config
-
 RUN fix-permissions /home/$NB_USER
   
 # Enable extensions
