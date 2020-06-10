@@ -7,6 +7,11 @@ ENV PYTHONIOENCODING UTF-8
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ENV NB_USER ubuntu
+RUN useradd -ms /bin/bash ubuntu
+
+RUN chmod -R 777 /home
+
 RUN apt-get -qy update && \
         apt-get -qy dist-upgrade && \
         apt-get -qy upgrade
@@ -28,6 +33,9 @@ RUN apt-get clean && \
 # install latest version of pip
 RUN pip3 install -U pip
 
+# Code formatter and linter
+RUN pip3 install black flake8
+
 # add standard data science libraries
 RUN pip3 install \
     numpy \
@@ -47,5 +55,38 @@ RUN pip3 install \
 RUN pip3 install \
     spacy \
     nltk
+    
+# install basic Python libraries to run Jupyter
+RUN pip3 install jupyter 
 
-RUN chmod -R 777 /home
+  
+
+RUN echo "c.NotebookApp.allow_root = True" >> /etc/jupyter/jupyter_notebook_config.py
+RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+
+# Enable extensions
+RUN pip3 install jupyter_contrib_nbextensions
+
+RUN jupyter contrib nbextension install --system
+RUN jupyter nbextension enable --system collapsible_headings/main
+RUN jupyter nbextension enable --system exercise2/main
+RUN jupyter nbextension enable --system spellchecker/main
+
+# Install Black as an extension
+RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
+RUN jupyter nbextension enable jupyter-black-master/jupyter-black
+
+
+RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> /etc/jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.allow_root = True" >> /etc/jupyter/jupyter_notebook_config.py
+RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+
+EXPOSE 3306 8888
+
+USER $NB_USER
+
+
+
+CMD ["start-notebook.sh"]
