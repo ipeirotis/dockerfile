@@ -11,8 +11,6 @@ ENV NB_UID="1000"
 ENV NB_GID="100"    
 ENV HOME=/home/$NB_USER
 
-RUN locale-gen en_US.UTF-8
-RUN dpkg-reconfigure locales
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -51,6 +49,8 @@ RUN apt-get -qy install \
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
+RUN dpkg-reconfigure locales
+    
 RUN apt-get clean && \
         rm -rf /var/lib/apt/lists/*
 
@@ -131,8 +131,6 @@ RUN echo "c.NotebookApp.allow_root = True" >> /etc/jupyter/jupyter_notebook_conf
 RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> /etc/jupyter/jupyter_notebook_config.py
 
 RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-
 
 # Fix permissions on /etc/jupyter as root
 USER root
