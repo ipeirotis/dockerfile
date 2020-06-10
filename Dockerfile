@@ -70,13 +70,6 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions $HOME
 
-USER $NB_USER
-WORKDIR $HOME
-
-# Setup work directory
-RUN mkdir -p /home/$NB_USER/notebooks && \
-    fix-permissions /home/$NB_USER
-
 # install latest version of pip
 RUN pip3 install -U pip
 
@@ -109,7 +102,6 @@ RUN pip3 install \
     notebook \
     jupyterlab
 
-RUN fix-permissions /home/$NB_USER
   
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
@@ -133,6 +125,12 @@ RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 # Fix permissions on /etc/jupyter as root
 USER root
 RUN fix-permissions /etc/jupyter/
+
+USER $NB_USER
+
+# Setup work directory
+RUN mkdir -p /home/$NB_USER/notebooks && \
+    fix-permissions /home/$NB_USER
 
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents
