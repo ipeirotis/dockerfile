@@ -13,8 +13,6 @@ RUN useradd -ms /bin/bash ubuntu
 
 RUN mkdir -p /home/ubuntu/notebooks
 
-RUN chmod -R 777 /home
-
 RUN apt-get -qy update && \
         apt-get -qy dist-upgrade && \
         apt-get -qy upgrade
@@ -87,6 +85,7 @@ RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 EXPOSE 8888
 
+RUN chmod -R 777 /home
 USER $NB_USER
 WORKDIR /home/ubuntu/notebooks
 
