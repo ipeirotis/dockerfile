@@ -140,5 +140,5 @@ RUN fix-permissions /etc/jupyter/
 
 
 USER $NB_USER
-CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
+CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--user=$NB_USER", "--allow-root"]
 
