@@ -97,8 +97,6 @@ RUN pip3 install \
     jupyter \
     notebook \
     jupyterlab
-
-
   
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
@@ -131,13 +129,13 @@ RUN chmod +x /usr/bin/tini
 # Setup work directory
 RUN mkdir -p /home/$NB_USER/notebooks
 RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
-RUN fix-permissions /home/$NB_USER
+RUN chmod -R 777 /home/
 
 EXPOSE 8888
 
 ENV HOME=/home/$NB_USER
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--user=ubuntu"]
+CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0"]
 
 USER $NB_USER
