@@ -63,15 +63,10 @@ RUN pip3 install \
 RUN pip3 install jupyter 
 
   
-
-RUN echo "c.NotebookApp.allow_root = True" >> /etc/jupyter/jupyter_notebook_config.py
-RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
-
 RUN jupyter contrib nbextension install --system
+
 RUN jupyter nbextension enable --system collapsible_headings/main
 RUN jupyter nbextension enable --system exercise2/main
 RUN jupyter nbextension enable --system spellchecker/main
