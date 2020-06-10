@@ -87,6 +87,6 @@ EXPOSE 3306 8888
 
 USER $NB_USER
 
+WORKDIR /notebooks
 
-
-CMD ["start-notebook.sh"]
+CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
