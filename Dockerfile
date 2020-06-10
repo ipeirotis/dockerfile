@@ -8,6 +8,7 @@ ENV PYTHONIOENCODING UTF-8
 ARG DEBIAN_FRONTEND=noninteractive
 
 ENV NB_USER ubuntu
+ENV SHELL /bin/bash
 RUN useradd -ms /bin/bash ubuntu
 
 RUN chmod -R 777 /home
@@ -78,10 +79,11 @@ RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 RUN mkdir -p /etc/jupyter
 RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> /etc/jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.allow_root = True" >> /etc/jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.notebook_dir = '/notebooks'" >> /etc/jupyter/jupyter_notebook_config.py
+
 RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-
-EXPOSE 3306 8888
+EXPOSE 8888
 
 USER $NB_USER
 
