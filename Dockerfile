@@ -11,6 +11,8 @@ ENV NB_USER ubuntu
 ENV SHELL /bin/bash
 RUN useradd -ms /bin/bash ubuntu
 
+RUN mkdir -p /home/ubuntu/notebooks
+
 RUN chmod -R 777 /home
 
 RUN apt-get -qy update && \
@@ -86,7 +88,6 @@ RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 EXPOSE 8888
 
 USER $NB_USER
-RUN mkdir -p /home/ubuntu/notebooks
 WORKDIR /home/ubuntu/notebooks
 
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
