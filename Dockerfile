@@ -126,15 +126,15 @@ RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER root
 RUN fix-permissions /etc/jupyter/
 
-USER $NB_USER
-
 # Setup work directory
+USER $NB_USER
 RUN mkdir -p /home/$NB_USER/notebooks && \
     fix-permissions /home/$NB_USER
 
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents
 # kernel crashes.
+USER root
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
 RUN chmod +x /usr/bin/tini
