@@ -11,6 +11,9 @@ ENV NB_UID="1000"
 ENV NB_GID="100"    
 ENV HOME=/home/$NB_USER
 
+RUN locale-gen en_US.UTF-8
+RUN dpkg-reconfigure locales
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 
@@ -67,7 +70,7 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions $HOME
 
-USER $NB_UID
+USER $NB_USER
 WORKDIR $HOME
 
 # Setup work directory
@@ -135,6 +138,7 @@ EXPOSE 8888
 USER root
 RUN fix-permissions /etc/jupyter/
 
+
+USER $NB_USER
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
 
-USER $NB_UID
