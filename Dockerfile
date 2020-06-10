@@ -117,9 +117,6 @@ RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> /etc/jupyter
 
 RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# Fix permissions on /etc/jupyter as root
-RUN fix-permissions /etc/jupyter/
-
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents
 # kernel crashes.
 ENV TINI_VERSION v0.19.0
@@ -127,15 +124,16 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/
 RUN chmod +x /usr/bin/tini
 
 # Setup work directory
-RUN mkdir -p /home/$NB_USER/notebooks
+RUN mkdir -p /home/ubuntu/notebooks
 RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
 RUN chmod -R 777 /home/
 
 EXPOSE 8888
 
-ENV HOME=/home/$NB_USER
-
-ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0"]
+ENV HOME=/home/ubuntu
 
 USER $NB_USER
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
+
+
