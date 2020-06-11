@@ -74,6 +74,8 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions /home/$NB_USER
 
+RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
+
 # Setup work directory
 RUN mkdir -p /home/$NB_USER/notebooks
 RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
@@ -137,6 +139,8 @@ RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88
 RUN echo "c.NotebookApp.allow_root = True" >> $HOME/.jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> $HOME/.jupyter/jupyter_notebook_config.py
 RUN echo "c.InlineBackend.figure_formats = set(['retina'])" >> $HOME/.jupyter/jupyter_notebook_config.py
+
+
 
 EXPOSE 8888
 
