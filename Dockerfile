@@ -72,7 +72,10 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions /home/$NB_USER
 
-
+# Setup work directory
+RUN mkdir -p /home/$NB_USER/notebooks
+RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
+RUN fix-permissions /home/$NB_USER
 
 # install latest version of pip
 RUN pip3 install -U pip
@@ -127,10 +130,7 @@ ENV PATH=$HOME/.local/bin:$PATH
 
 WORKDIR $HOME
 
-# Setup work directory
-RUN mkdir -p /home/$NB_USER/notebooks
-RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
-RUN fix-permissions /home/$NB_USER
+
 
 RUN jupyter notebook --generate-config
 
