@@ -7,4 +7,6 @@ set -e
 sudo chmod -R 777 /home/ubuntu
 sudo chown ubuntu /home/ubuntu
 
+mkdir -p /home/ubuntu/notebooks
+
 exec jupyter notebook $*
