@@ -68,6 +68,9 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
 
 USER $NB_UID
 ENV HOME=/home/$NB_USER
+
+ENV PATH=$HOME/.local/bin:$PATH
+
 WORKDIR $HOME
 
 # Setup work directory
