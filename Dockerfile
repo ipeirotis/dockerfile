@@ -10,6 +10,7 @@ ENV NB_USER="ubuntu"
 ENV NB_UID="1000"
 ENV NB_GID="100"    
 
+ARG NETRC
 ARG DEBIAN_FRONTEND=noninteractive
 
 # We stil setup everything as root, change permissions later
