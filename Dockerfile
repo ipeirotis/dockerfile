@@ -72,17 +72,7 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions /home/$NB_USER
 
-USER $NB_UID
-ENV HOME=/home/$NB_USER
 
-ENV PATH=$HOME/.local/bin:$PATH
-
-WORKDIR $HOME
-
-# Setup work directory
-RUN mkdir -p /home/$NB_USER/notebooks
-RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
-RUN fix-permissions /home/$NB_USER
 
 # install latest version of pip
 RUN pip3 install -U pip
@@ -116,19 +106,33 @@ RUN pip3 install \
     notebook \
     jupyterlab
 
-RUN jupyter notebook --generate-config
+
 
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
-RUN jupyter contrib nbextension install --user
+RUN jupyter contrib nbextension install --system
 
 RUN jupyter nbextension enable collapsible_headings/main
 RUN jupyter nbextension enable exercise2/main
 RUN jupyter nbextension enable spellchecker/main
 
 # Install Black as an extension
-RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
+RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --system
 RUN jupyter nbextension enable jupyter-black-master/jupyter-black
+
+USER $NB_UID
+ENV HOME=/home/$NB_USER
+
+ENV PATH=$HOME/.local/bin:$PATH
+
+WORKDIR $HOME
+
+# Setup work directory
+RUN mkdir -p /home/$NB_USER/notebooks
+RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
+RUN fix-permissions /home/$NB_USER
+
+RUN jupyter notebook --generate-config
 
 RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> $HOME/.jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.allow_root = True" >> $HOME/.jupyter/jupyter_notebook_config.py
@@ -140,4 +144,4 @@ RUN echo "c.InlineBackend.figure_formats = set(['retina'])" >> $HOME/.jupyter/ju
 EXPOSE 8888
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["/home/ubuntu/.local/bin/jupyter-notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
+CMD ["jupyter-notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
