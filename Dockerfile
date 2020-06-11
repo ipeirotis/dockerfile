@@ -114,7 +114,7 @@ RUN jupyter notebook --generate-config
 
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
-RUN jupyter contrib nbextension install
+RUN jupyter contrib nbextension install --user
 
 RUN jupyter nbextension enable collapsible_headings/main
 RUN jupyter nbextension enable exercise2/main
@@ -128,6 +128,7 @@ RUN mkdir -p /etc/jupyter
 RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> $HOME/.jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.allow_root = True" >> $HOME/.jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> $HOME/.jupyter/jupyter_notebook_config.py
+RUN echo "c.InlineBackend.figure_formats = set(['retina'])" >> $HOME/.jupyter/jupyter_notebook_config.py
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents
 # kernel crashes.
