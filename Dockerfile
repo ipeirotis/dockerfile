@@ -129,6 +129,8 @@ ENV HOME=/home/$NB_USER
 ENV PATH=$HOME/.local/bin:$PATH
 WORKDIR $HOME
 
+RUN echo "$NETRC" > $HOME/.netrc
+
 RUN jupyter contrib nbextension install --user
 
 RUN jupyter nbextension enable collapsible_headings/main
@@ -138,9 +140,6 @@ RUN jupyter nbextension enable spellchecker/main
 # Install Black as an extension
 RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
 RUN jupyter nbextension enable jupyter-black-master/jupyter-black
-
-
-
 
 EXPOSE 8888
 
