@@ -118,15 +118,6 @@ RUN pip3 install \
 
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
-RUN jupyter contrib nbextension install --system
-
-RUN jupyter nbextension enable collapsible_headings/main
-RUN jupyter nbextension enable exercise2/main
-RUN jupyter nbextension enable spellchecker/main
-
-# Install Black as an extension
-RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --system
-RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 
 COPY jupyter_notebook_config.py /etc/jupyter/
 RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> /etc/jupyter/jupyter_notebook_config.py
@@ -137,6 +128,15 @@ ENV HOME=/home/$NB_USER
 ENV PATH=$HOME/.local/bin:$PATH
 WORKDIR $HOME
 
+RUN jupyter contrib nbextension install --user
+
+RUN jupyter nbextension enable collapsible_headings/main
+RUN jupyter nbextension enable exercise2/main
+RUN jupyter nbextension enable spellchecker/main
+
+# Install Black as an extension
+RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
+RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 
 
 
