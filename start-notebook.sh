@@ -7,6 +7,12 @@ set -e
 sudo chmod -R 777 /home/ubuntu
 sudo chown ubuntu /home/ubuntu
 
+# Assumes that a .netrc has been created in the volume
+# TODO: upload an encrypted file, decrypt before the build,
+# and copy to Dockerfile. Probably need to make the registry
+# private as well
+ln -s $HOME/notebooks/.netrc $HOME/.netrc
+
 mkdir -p /home/ubuntu/notebooks
 
 exec jupyter notebook $*
