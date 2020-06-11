@@ -59,6 +59,8 @@ RUN chmod +x /usr/bin/tini
 # Copy a script that we will use to correct permissions after running certain commands
 COPY fix-permissions /usr/local/bin/fix-permissions
 RUN chmod a+rx /usr/local/bin/fix-permissions
+COPY start-notebook.sh /usr/local/bin/
+RUN chmod a+rx /usr/local/bin/start-notebook.sh
 
 # Enable prompt color in the skeleton .bashrc before creating the default NB_USER
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc
@@ -123,7 +125,7 @@ RUN jupyter nbextension enable spellchecker/main
 RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --system
 RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 
-COPY start-notebook.sh /usr/local/bin/
+
 
 USER $NB_UID
 ENV HOME=/home/$NB_USER
