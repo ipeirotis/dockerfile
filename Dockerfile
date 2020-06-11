@@ -124,7 +124,6 @@ RUN jupyter nbextension enable spellchecker/main
 RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
 RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 
-RUN mkdir -p /etc/jupyter
 RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> $HOME/.jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.allow_root = True" >> $HOME/.jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> $HOME/.jupyter/jupyter_notebook_config.py
@@ -136,10 +135,7 @@ ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
 RUN chmod +x /usr/bin/tini
 
-
-
 EXPOSE 8888
 
 ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
-
