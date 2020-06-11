@@ -4,8 +4,8 @@
 set -e
 
 # Overwrite permission changes when mounting persistent volumes.
-sudo chmod -R 777 /home/ubuntu
 sudo chown ubuntu /home/ubuntu
+sudo chmod -R 755 /home/ubuntu
 
 # Assumes that a .netrc has been created in the volume
 # TODO: upload an encrypted file, decrypt before the build,
