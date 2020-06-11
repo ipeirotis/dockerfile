@@ -127,18 +127,16 @@ RUN jupyter nbextension enable spellchecker/main
 RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --system
 RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 
-
+COPY jupyter_notebook_config.py /etc/jupyter/
+RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> /etc/jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> /etc/jupyter/jupyter_notebook_config.py
 
 USER $NB_UID
 ENV HOME=/home/$NB_USER
 ENV PATH=$HOME/.local/bin:$PATH
 WORKDIR $HOME
 
-RUN jupyter notebook --generate-config
-RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> $HOME/.jupyter/jupyter_notebook_config.py
-RUN echo "c.NotebookApp.allow_root = True" >> $HOME/.jupyter/jupyter_notebook_config.py
-RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> $HOME/.jupyter/jupyter_notebook_config.py
-RUN echo "c.InlineBackend.figure_formats = set(['retina'])" >> $HOME/.jupyter/jupyter_notebook_config.py
+
 
 
 
