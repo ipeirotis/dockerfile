@@ -139,5 +139,5 @@ RUN echo "c.InlineBackend.figure_formats = set(['retina'])" >> $HOME/.jupyter/ju
 
 EXPOSE 8888
 
-# ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
+ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
