@@ -35,6 +35,7 @@ RUN apt-get install -yq  \
         cron \
         curl \
         git \
+        vi \
         jq
 
 RUN apt-get -qy install \
