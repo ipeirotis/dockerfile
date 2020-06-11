@@ -130,6 +130,7 @@ ENV PATH=$HOME/.local/bin:$PATH
 WORKDIR $HOME
 
 RUN echo "$NETRC" > $HOME/.netrc
+RUN chmod 600 $HOME/.netrc
 
 RUN jupyter contrib nbextension install --user
 
