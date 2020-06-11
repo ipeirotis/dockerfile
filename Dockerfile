@@ -109,25 +109,25 @@ RUN pip3 install \
     jupyter \
     notebook \
     jupyterlab
-  
+
+RUN jupyter notebook --generate-config
+
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
-RUN jupyter contrib nbextension install --system
+RUN jupyter contrib nbextension install
 
-RUN jupyter nbextension enable --system collapsible_headings/main
-RUN jupyter nbextension enable --system exercise2/main
-RUN jupyter nbextension enable --system spellchecker/main
+RUN jupyter nbextension enable collapsible_headings/main
+RUN jupyter nbextension enable exercise2/main
+RUN jupyter nbextension enable spellchecker/main
 
 # Install Black as an extension
 RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
 RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 
 RUN mkdir -p /etc/jupyter
-RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> /etc/jupyter/jupyter_notebook_config.py
-RUN echo "c.NotebookApp.allow_root = True" >> /etc/jupyter/jupyter_notebook_config.py
-RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> /etc/jupyter/jupyter_notebook_config.py
-
-RUN echo "ALL  ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> $HOME/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.allow_root = True" >> $HOME/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> $HOME/.jupyter/jupyter_notebook_config.py
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents
 # kernel crashes.
