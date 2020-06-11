@@ -50,6 +50,12 @@ RUN dpkg-reconfigure locales
 RUN apt-get clean && \
         rm -rf /var/lib/apt/lists/*
 
+# Add Tini. Tini operates as a process subreaper for jupyter. This prevents
+# kernel crashes.
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+
 # Copy a script that we will use to correct permissions after running certain commands
 COPY fix-permissions /usr/local/bin/fix-permissions
 RUN chmod a+rx /usr/local/bin/fix-permissions
@@ -129,11 +135,7 @@ RUN echo "c.NotebookApp.allow_root = True" >> $HOME/.jupyter/jupyter_notebook_co
 RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> $HOME/.jupyter/jupyter_notebook_config.py
 RUN echo "c.InlineBackend.figure_formats = set(['retina'])" >> $HOME/.jupyter/jupyter_notebook_config.py
 
-# Add Tini. Tini operates as a process subreaper for jupyter. This prevents
-# kernel crashes.
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
-RUN chmod +x /usr/bin/tini
+
 
 EXPOSE 8888
 
