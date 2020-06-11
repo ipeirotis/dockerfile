@@ -66,6 +66,16 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions /home/$NB_USER
 
+USER $NB_UID
+ENV HOME=/home/$NB_USER
+WORKDIR $HOME
+
+# Setup work directory
+RUN mkdir -p /home/$NB_USER/notebooks
+RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
+RUN chmod -R 777 /home/
+RUN fix-permissions /home/$NB_USER
+
 # install latest version of pip
 RUN pip3 install -U pip
 
@@ -123,16 +133,10 @@ ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
 RUN chmod +x /usr/bin/tini
 
-# Setup work directory
-RUN mkdir -p /home/ubuntu/notebooks
-RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
-RUN chmod -R 777 /home/
+
 
 EXPOSE 8888
 
-ENV HOME=/home/ubuntu
-
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
-
 
