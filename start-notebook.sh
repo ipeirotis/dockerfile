@@ -7,4 +7,4 @@ set -e
 sudo chmod -R 777 /home/ubuntu
 sudo chown ubuntu /home/ubuntu
 
-exec jupyter notebook --no-browser --ip=0.0.0.0 --port=8888
+exec jupyter notebook $*
