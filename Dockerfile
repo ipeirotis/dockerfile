@@ -73,7 +73,6 @@ WORKDIR $HOME
 # Setup work directory
 RUN mkdir -p /home/$NB_USER/notebooks
 RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
-RUN chmod -R 777 /home/
 RUN fix-permissions /home/$NB_USER
 
 # install latest version of pip
