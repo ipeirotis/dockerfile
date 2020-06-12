@@ -87,7 +87,7 @@ RUN fix-permissions /home/$NB_USER
 RUN pip3 install -U pip
 
 # Code formatter and linter
-RUN pip3 install black flake8
+RUN pip3 install black flake8 flake8-nb
 
 # add standard data science libraries
 RUN pip3 install \
