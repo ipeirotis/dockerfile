@@ -123,9 +123,11 @@ RUN pip3 install \
 RUN pip3 install \
     jupyter \
     notebook \
+    nbformat \
+    nbstripout \
     jupyterlab
 
-
+RUN pip3 
 
 # Enable extensions
 RUN pip3 install jupyter_contrib_nbextensions
