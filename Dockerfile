@@ -90,7 +90,7 @@ RUN pip3 install -U pip
 RUN pip3 install black flake8 flake8-nb
 
 # Code for interacting with MySQL
-RUN PyMySQL sqlalchemy sql_magic
+RUN pip3 install PyMySQL sqlalchemy sql_magic
 
 # add standard data science libraries
 RUN pip3 install \
