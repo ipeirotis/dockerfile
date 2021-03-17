@@ -104,7 +104,7 @@ RUN pip3 install \
     scipy \
     matplotlib \
     pandas \
-    xlwt \
+    openpyxl \
     seaborn \
     statsmodels \
     scikit-learn
