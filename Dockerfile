@@ -119,6 +119,10 @@ RUN pip3 install \
     spacy \
     nltk
     
+# add libraries for Web crawling
+RUN pip3 install \
+    bs4   
+    
 # install basic Python libraries to run Jupyter
 RUN pip3 install \
     jupyter \
