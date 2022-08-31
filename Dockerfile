@@ -83,6 +83,14 @@ RUN mkdir -p /home/$NB_USER/notebooks
 RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
 RUN fix-permissions /home/$NB_USER
 
+# install libraries for geospatial
+RUN apt-get -qy libgeos-dev \
+                libproj-dev \
+                proj-data \
+                proj-bin \
+                libgdal-dev \
+                libspatialindex-dev
+
 # install latest version of pip
 RUN pip3 install -U pip
 
@@ -104,10 +112,21 @@ RUN pip3 install \
     scipy \
     matplotlib \
     pandas \
+    xlrd \
     openpyxl \
     seaborn \
     statsmodels \
     scikit-learn
+    
+# add geospatial libraries
+RUN pip3 install \
+    shapely \
+    rtree \
+    pygeos \
+    geopandas \
+    geopy \
+    descartes
+
 
 # add libraries for teaching web APIs
 RUN pip3 install \
