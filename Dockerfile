@@ -44,6 +44,15 @@ RUN apt-get -qy install \
         python3-dev \
         python3-pip 
 
+# install libraries for geospatial
+RUN apt-get -qy install \
+                libgeos-dev \
+                libproj-dev \
+                proj-data \
+                proj-bin \
+                libgdal-dev \
+                libspatialindex-dev
+
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
@@ -83,14 +92,7 @@ RUN mkdir -p /home/$NB_USER/notebooks
 RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
 RUN fix-permissions /home/$NB_USER
 
-# install libraries for geospatial
-RUN apt-get -qy install \
-                libgeos-dev \
-                libproj-dev \
-                proj-data \
-                proj-bin \
-                libgdal-dev \
-                libspatialindex-dev
+
 
 # install latest version of pip
 RUN pip3 install -U pip
