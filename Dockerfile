@@ -84,7 +84,8 @@ RUN chown -R $NB_USER:$NB_GID /home/$NB_USER
 RUN fix-permissions /home/$NB_USER
 
 # install libraries for geospatial
-RUN apt-get -qy libgeos-dev \
+RUN apt-get -qy install \
+                libgeos-dev \
                 libproj-dev \
                 proj-data \
                 proj-bin \
