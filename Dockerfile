@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-
+  
 # Configure environment
 ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8
