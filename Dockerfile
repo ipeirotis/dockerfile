@@ -180,7 +180,11 @@ RUN jupyter nbextension enable spellchecker/main
 RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
 RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 
+# Open port for Jupyter
 EXPOSE 8888
+
+# Open port for various uses (Flask, SSH tunnel, etc)
+EXPOSE 5555
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["start-notebook.sh"]
