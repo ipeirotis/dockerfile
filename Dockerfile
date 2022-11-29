@@ -184,6 +184,7 @@ RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 EXPOSE 8888
 
 # Open port for various uses (Flask, SSH tunnel, etc)
+EXPOSE 22
 EXPOSE 5555
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
