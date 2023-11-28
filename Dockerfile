@@ -45,13 +45,13 @@ RUN apt-get -qy install \
         python3-pip 
 
 # install libraries for geospatial
-RUN apt-get -qy install \
-                libgeos-dev \
-                libproj-dev \
-                proj-data \
-                proj-bin \
-                libgdal-dev \
-                libspatialindex-dev
+# RUN apt-get -qy install \
+#                libgeos-dev \
+#                libproj-dev \
+#                proj-data \
+#                proj-bin \
+#                lingual-dev \
+#                libspatialindex-dev
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -76,7 +76,7 @@ RUN chmod a+rx /usr/local/bin/start-notebook.sh
 # Enable prompt color in the skeleton .bashrc before creating the default NB_USER
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc
 
-# Create NB_USER wtih name jovyan user with UID=1000 and in the 'users' group
+# Create NB_USER with name jovyan user with UID=1000 and in the 'users' group
 # and make sure these dirs are writable by the `users` group.
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers && \
@@ -106,10 +106,9 @@ RUN pip3 install \
 # Code for interacting with MySQL
 RUN pip3 install \
         PyMySQL \
-        sqlalchemy \
-        sql_magic
+        sqlalchemy
 
-# add standard data science libraries
+# Add standard data science libraries
 RUN pip3 install \
     numpy \
     scipy \
@@ -124,11 +123,14 @@ RUN pip3 install \
 # add geospatial libraries
 RUN pip3 install \
     shapely \
-    rtree \
-    pygeos \
+    pyproj \
+    fiona \
     geopandas \
-    geopy \
-    descartes
+    program \
+    Descartes \
+    folium \ 
+    geoplot \
+    mapclassify
 
 
 # add libraries for teaching web APIs
@@ -173,7 +175,6 @@ RUN chmod 600 $HOME/.netrc
 RUN jupyter contrib nbextension install --user
 
 RUN jupyter nbextension enable collapsible_headings/main
-RUN jupyter nbextension enable exercise2/main
 RUN jupyter nbextension enable spellchecker/main
 
 # Install Black as an extension
