@@ -36,11 +36,7 @@ RUN apt-get install -yq --no-install-recommends \
     tini \
     run-one
     
-RUN apt-get clean && \ 
-    rm -rf /var/lib/apt/lists/* && \
-    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
-    locale-gen
-        
+
 RUN apt-get install -yq  \
         nano \
         cron \
