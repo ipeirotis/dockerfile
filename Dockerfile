@@ -15,7 +15,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Fix: https://github.com/hadolint/hadolint/wiki/DL4006
 # Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # We still setup everything as root, change permissions later
 USER root
