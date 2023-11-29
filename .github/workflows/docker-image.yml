@@ -27,4 +27,5 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ipeirotis/dealing_with_data
           build_args: NETRC=${{ secrets.NETRC }}
+          push: true
           tags: latest
