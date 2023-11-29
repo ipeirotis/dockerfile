@@ -100,6 +100,7 @@ RUN pip3 install -U pip
 # Code formatter and linter
 RUN pip3 install \
         black \
+        isort \
         flake8 \
         flake8-nb
 
@@ -153,7 +154,7 @@ RUN pip3 install \
     notebook \
     nbformat \
     nbstripout \
-    jupyter-black \
+    jupyterlab-code-formatter \
     jupyterlab
 
 RUN pip3 
