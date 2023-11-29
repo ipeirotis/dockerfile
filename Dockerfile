@@ -11,9 +11,13 @@ ENV NB_UID="1000"
 ENV NB_GID="100"    
 
 ARG NETRC
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
 
-# We stil setup everything as root, change permissions later
+# Fix: https://github.com/hadolint/hadolint/wiki/DL4006
+# Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# We still setup everything as root, change permissions later
 USER root
 
 RUN apt-get -qy update && \
@@ -29,7 +33,11 @@ RUN apt-get install -yq --no-install-recommends \
     sudo \
     locales \
     fonts-liberation \
-    run-one       
+    tini \
+    run-one && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen
         
 RUN apt-get install -yq  \
         nano \
@@ -60,12 +68,6 @@ RUN dpkg-reconfigure locales
     
 RUN apt-get clean && \
         rm -rf /var/lib/apt/lists/*
-
-# Add Tini. Tini operates as a process subreaper for jupyter. This prevents
-# kernel crashes.
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
-RUN chmod +x /usr/bin/tini
 
 # Copy a script that we will use to correct permissions after running certain commands
 COPY fix-permissions /usr/local/bin/fix-permissions
@@ -153,6 +155,7 @@ RUN pip3 install \
     notebook \
     nbformat \
     nbstripout \
+    jupyter-black \
     jupyterlab
 
 RUN pip3 
@@ -172,14 +175,9 @@ WORKDIR $HOME
 RUN echo "$NETRC" > $HOME/.netrc
 RUN chmod 600 $HOME/.netrc
 
-RUN jupyter contrib nbextension install --user
-
-RUN jupyter nbextension enable collapsible_headings/main
-RUN jupyter nbextension enable spellchecker/main
-
 # Install Black as an extension
-RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
-RUN jupyter nbextension enable jupyter-black-master/jupyter-black
+# RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
+# RUN jupyter nbextension enable jupyter-black-master/jupyter-black
 
 # Open port for Jupyter
 EXPOSE 8888
@@ -188,5 +186,6 @@ EXPOSE 8888
 EXPOSE 22
 EXPOSE 5555
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
+
