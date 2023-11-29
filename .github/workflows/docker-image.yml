@@ -9,19 +9,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-    - uses: 'google-github-actions/auth@v2'
-      with:
-        project_id: 'ipeirotis-hrd'
-        credentials_json: ${{ secrets.GCR_JSON_KEY }}
-
-    - name: Configure Docker for GCR
-      run: gcloud auth configure-docker
-
-    - name: Build and push Docker image
-      run: |
-        docker build -t us-east1-docker.pkg.dev/ipeirotis-hrd/ipeirotis/dealing-with-data:latest .
-        docker push us-east1-docker.pkg.dev/ipeirotis-hrd/ipeirotis/dealing-with-data:latest      
+      
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: 'ipeirotis-hrd'
+          credentials_json: ${{ secrets.GCR_JSON_KEY }}
+          
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker
+        
+      - name: Build and push Docker image
+        run: |
+          docker build -t us-east1-docker.pkg.dev/ipeirotis-hrd/ipeirotis/dealing-with-data:latest .
+          docker push us-east1-docker.pkg.dev/ipeirotis-hrd/ipeirotis/dealing-with-data:latest      
