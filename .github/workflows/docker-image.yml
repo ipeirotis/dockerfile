@@ -14,7 +14,7 @@ jobs:
 
       - uses: google-github-actions/auth@v2
         with:
-          project_id: 'ipeirotis-hrd'
+          project_id: 'panos-jupyter'
           credentials_json: ${{ secrets.GCR_JSON_KEY }}
 
       - name: Configure Docker for GCR
@@ -22,5 +22,5 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t us-east1-docker.pkg.dev/ipeirotis-hrd/ipeirotis/dealing-with-data:latest .
-          docker push us-east1-docker.pkg.dev/ipeirotis-hrd/ipeirotis/dealing-with-data:latest
+          docker build -t us-east1-docker.pkg.dev/panos-jupyter/ipeirotis/dealing-with-data:latest .
+          docker push us-east1-docker.pkg.dev/panos-jupyter/ipeirotis/dealing-with-data:latest
