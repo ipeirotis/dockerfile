@@ -15,17 +15,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-      - uses: docker/build-push-action@v5
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ipeirotis/dealing_with_data
-          build_args: NETRC=${{ secrets.NETRC }}
-          push: true
-          tags: latest
+    - uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: 'ipeirotis-hrd'
+        credentials_json: ${{ secrets.GCR_JSON_KEY }}
+
+    - name: Configure Docker for GCR
+      run: gcloud auth configure-docker
+
+    - name: Build and push Docker image
+      run: |
+        docker build -t us-east1-docker.pkg.dev/ipeirotis-hrd/ipeirotis/dealing-with-data:latest .
+        docker push us-east1-docker.pkg.dev/ipeirotis-hrd/ipeirotis/dealing-with-data:latest      
