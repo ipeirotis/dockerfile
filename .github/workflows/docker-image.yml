@@ -18,7 +18,7 @@ jobs:
           credentials_json: ${{ secrets.GCR_JSON_KEY }}
 
       - name: Configure Docker for GCR
-        run: gcloud auth configure-docker
+        run: gcloud auth configure-docker us-east1-docker.pkg.dev
 
       - name: Build and push Docker image
         run: |
