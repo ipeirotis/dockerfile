@@ -20,49 +20,44 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # We still setup everything as root, change permissions later
 USER root
 
-RUN apt-get -qy update && \
-        apt-get -qy dist-upgrade && \
-        apt-get -qy upgrade
-
-# Install all OS dependencies for notebook server that starts but lacks all
-# features (e.g., download as all possible file formats)
-RUN apt-get install -yq --no-install-recommends \
-    wget \
-    bzip2 \
-    ca-certificates \
-    sudo \
-    locales \
-    fonts-liberation \
-    tini \
-    run-one
-    
-
-RUN apt-get install -yq  \
-        nano \
-        cron \
-        curl \
-        git \
-        tzdata \
-        less \
-        openssh-client \
-        texlive-xetex \
-        texlive-fonts-recommended \
-        texlive-plain-generic \        
-        vim \
-        jq
-
-RUN apt-get -qy install \
-        build-essential \
-        cm-super \
-        dvipng \
-        ffmpeg \
-        python3-dev \
-        python3-pip 
-
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
 RUN dpkg-reconfigure locales
+
+RUN apt-get -qy update && \\
+    apt-get install -yq --no-install-recommends \
+      wget \
+      bzip2 \
+      ca-certificates \
+      sudo \
+      locales \
+      fonts-liberation \
+      tini \
+      run-one && \
+  apt-get install -yq  --no-install-recommends \
+      nano \
+      cron \
+      curl \
+      git \
+      tzdata \
+      less \
+      openssh-client \      
+      vim \
+      jq && \
+  apt-get install -qy  --no-install-recommends \
+      texlive-xetex \
+      texlive-fonts-recommended \
+      texlive-plain-generic && \  
+  apt-get install -qy  --no-install-recommends \
+      build-essential \
+      cm-super \
+      dvipng \
+      ffmpeg \
+      python3-dev \
+      python3-pip 
+
+
     
 RUN apt-get clean && \
         rm -rf /var/lib/apt/lists/*
