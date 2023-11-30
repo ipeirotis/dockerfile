@@ -47,10 +47,8 @@ RUN apt-get install -yq  \
 
 RUN apt-get -qy install \
         build-essential \
-            # for latex labels
         cm-super \
         dvipng \
-        # for matplotlib anim
         ffmpeg \
         python3-dev \
         python3-pip 
@@ -178,7 +176,6 @@ RUN pip3 install \
     widgetsnbextension \ 
     jupyterlab
 
-RUN pip3 
 
 COPY overrides.json /opt/conda/share/jupyter/lab/settings/
 
