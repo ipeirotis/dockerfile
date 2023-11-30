@@ -25,7 +25,7 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 
 RUN dpkg-reconfigure locales
 
-RUN apt-get -qy update && \\
+RUN apt-get -qy update && \
     apt-get install -yq --no-install-recommends \
       wget \
       bzip2 \
