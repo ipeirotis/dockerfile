@@ -47,17 +47,13 @@ RUN apt-get install -yq  \
 
 RUN apt-get -qy install \
         build-essential \
+            # for latex labels
+        cm-super \
+        dvipng \
+        # for matplotlib anim
+        ffmpeg \
         python3-dev \
         python3-pip 
-
-# install libraries for geospatial
-# RUN apt-get -qy install \
-#                libgeos-dev \
-#                libproj-dev \
-#                proj-data \
-#                proj-bin \
-#                lingual-dev \
-#                libspatialindex-dev
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -100,7 +96,7 @@ RUN pip3 install -U pip
 # Code formatter and linter
 RUN pip3 install \
         Black \
-        isort \
+        sort \
         yapf \
         autopep8 \
         flake8 \
@@ -115,13 +111,33 @@ RUN pip3 install \
 RUN pip3 install \
     numpy \
     scipy \
-    matplotlib \
+    cython \
     pandas \
+    dask \
+    sympy \
+    h5py \
     xlrd \
     openpyxl \
+    numba \
+    statsmodels
+    
+
+RUN pip3 install \
+    scikit-learn \
+    tensorflow \
+    keras \
+    torch \
+    torchvision \
+    torchaudio 
+
+# Add standard visualization libraries
+RUN pip3 install \
+    altair \
+    bokeh \
+    matplotlib \
+    pandas \
     seaborn \
-    statsmodels \
-    scikit-learn
+    pytables \ 
     
 # add geospatial libraries
 RUN pip3 install \
@@ -146,7 +162,7 @@ RUN pip3 install \
     spacy \
     nltk
     
-# add libraries for Web crawling
+# Add libraries for Web crawling
 RUN pip3 install \
     bs4   
     
@@ -157,6 +173,9 @@ RUN pip3 install \
     nbformat \
     nbstripout \
     jupyterlab-code-formatter \
+    jupyterlab-git \
+    ipywidgets \ 
+    widgetsnbextension \ 
     jupyterlab
 
 RUN pip3 
@@ -166,6 +185,11 @@ COPY overrides.json /opt/conda/share/jupyter/lab/settings/
 COPY jupyter_notebook_config.py /etc/jupyter/
 RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> /etc/jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> /etc/jupyter/jupyter_notebook_config.py
+
+# Import matplotlib the first time to build the font cache
+RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+    fix-permissions "/home/${NB_USER}"
+
 
 USER $NB_UID
 ENV HOME=/home/$NB_USER
