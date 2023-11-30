@@ -100,7 +100,9 @@ RUN pip3 install -U pip
 # Code formatter and linter
 RUN pip3 install \
         black \
-        isort \
+        sort \
+        yapf \
+        autopep8 \
         flake8 \
         flake8-nb
 
