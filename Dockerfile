@@ -23,6 +23,7 @@ USER root
 
 
 RUN apt-get -qy update && \
+    apt-get upgrade --yes && \
     apt-get install -yq --no-install-recommends \
       wget \
       bzip2 \
@@ -30,6 +31,7 @@ RUN apt-get -qy update && \
       sudo \
       locales \
       fonts-liberation \
+      pandoc \
       tini \
       run-one && \
   apt-get install -yq  --no-install-recommends \
