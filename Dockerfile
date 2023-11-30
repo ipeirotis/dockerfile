@@ -160,7 +160,7 @@ RUN pip3 install \
 RUN pip3 
 
 # Enable extensions
-RUN pip3 install jupyter_contrib_nbextensions
+RUN jupyter labextension install @jupyterlab/dark-mode
 
 COPY jupyter_notebook_config.py /etc/jupyter/
 RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> /etc/jupyter/jupyter_notebook_config.py
@@ -174,16 +174,8 @@ WORKDIR $HOME
 RUN echo "$NETRC" > $HOME/.netrc
 RUN chmod 600 $HOME/.netrc
 
-# Install Black as an extension
-# RUN jupyter nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
-# RUN jupyter nbextension enable jupyter-black-master/jupyter-black
-
 # Open port for Jupyter
 EXPOSE 8888
-
-# Open port for various uses (Flask, SSH tunnel, etc)
-EXPOSE 22
-EXPOSE 5555
 
 ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
