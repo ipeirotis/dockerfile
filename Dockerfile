@@ -48,7 +48,7 @@ RUN  apt-get install -yq  --no-install-recommends \
       git \
       tzdata \
       less \
-      OpenSSH-client \      
+      openssh-client \      
       vim \
       jq && \
   apt-get install -qy  --no-install-recommends \
