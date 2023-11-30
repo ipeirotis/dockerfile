@@ -135,7 +135,7 @@ RUN pip3 install \
     matplotlib \
     pandas \
     seaborn \
-    pytables \ 
+    pytables
     
 # add geospatial libraries
 RUN pip3 install \
