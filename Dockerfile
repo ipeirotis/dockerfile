@@ -189,10 +189,10 @@ COPY jupyter_notebook_config.py /etc/jupyter/
 RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> /etc/jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> /etc/jupyter/jupyter_notebook_config.py
 
-# Import matplotlib the first time to build the font cache
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
-    fix-permissions "/home/${NB_USER}"
 
+# Import matplotlib the first time to build the font cache
+RUN MPLBACKEND=Agg python3 -c "import matplotlib.pyplot" && \
+    fix-permissions "/home/${NB_USER}"
 
 USER $NB_UID
 ENV HOME=/home/$NB_USER
