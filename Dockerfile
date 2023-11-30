@@ -159,9 +159,6 @@ RUN pip3 install \
 
 RUN pip3 
 
-# Enable extensions
-RUN jupyter labextension install @jupyterlab/dark-mode
-
 COPY overrides.json /opt/conda/share/jupyter/lab/settings/
 
 COPY jupyter_notebook_config.py /etc/jupyter/
