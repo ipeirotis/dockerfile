@@ -99,7 +99,7 @@ RUN pip3 install -U pip
 
 # Code formatter and linter
 RUN pip3 install \
-        Black \
+        black \
         sort \
         yapf \
         autopep8 \
