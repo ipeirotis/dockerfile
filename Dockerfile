@@ -33,15 +33,22 @@ RUN apt-get -qy update && \
       fonts-liberation \
       pandoc \
       tini \
-      run-one && \
-  apt-get install -yq  --no-install-recommends \
+      run-one
+
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen
+
+RUN dpkg-reconfigure locales
+    
+
+RUN  apt-get install -yq  --no-install-recommends \
       nano \
       cron \
       curl \
       git \
       tzdata \
       less \
-      openssh-client \      
+      OpenSSH-client \      
       vim \
       jq && \
   apt-get install -qy  --no-install-recommends \
@@ -56,10 +63,6 @@ RUN apt-get -qy update && \
       python3-dev \
       python3-pip 
 
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
-    locale-gen
-
-RUN dpkg-reconfigure locales
     
 RUN apt-get clean && \
         rm -rf /var/lib/apt/lists/*
