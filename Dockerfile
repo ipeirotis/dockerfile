@@ -42,6 +42,12 @@ RUN apt-get install -yq  \
         cron \
         curl \
         git \
+        tzdata \
+        less \
+        openssh-client \
+        texlive-xetex \
+        texlive-fonts-recommended \
+        texlive-plain-generic \        
         vim \
         jq
 
