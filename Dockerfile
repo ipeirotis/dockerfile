@@ -168,7 +168,7 @@ RUN pip3 install \
     
 # Add libraries for Web crawling
 RUN pip3 install \
-    bs4   
+    bs4
     
 # install basic Python libraries to run Jupyter
 RUN pip3 install \
@@ -180,14 +180,17 @@ RUN pip3 install \
     jupyterlab-git \
     ipywidgets \ 
     widgetsnbextension \ 
-    jupyterlab
-
+    jupyterlab \
+    jupyterlab-lsp \
+    python-lsp-server[all]
 
 COPY overrides.json /opt/conda/share/jupyter/lab/settings/
 
 COPY jupyter_notebook_config.py /etc/jupyter/
 RUN echo "c.NotebookApp.password = 'sha1:44967f2c7dbb:4ae5e013fa8bae6fd8d4b8fa88775c0c5caeffbf'" >> /etc/jupyter/jupyter_notebook_config.py
 RUN echo "c.NotebookApp.notebook_dir = '/home/ubuntu/notebooks'" >> /etc/jupyter/jupyter_notebook_config.py
+RUN echo "c.Completer.use_jedi = False" >> /etc/jupyter/jupyter_notebook_config.py
+
 
 
 # Import matplotlib the first time to build the font cache
